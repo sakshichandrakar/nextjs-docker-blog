@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Swal from 'sweetalert2'
+import toast from 'react-hot-toast'
 
 type Blog = {
   id: number
@@ -23,41 +25,70 @@ export default function AdminPage() {
     fetchBlogs()
   }, [])
 
+  const handleDelete = async (id: number) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This action cannot be undone!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, delete it!',
+    })
+
+    if (result.isConfirmed) {
+      const token = localStorage.getItem('token')
+      const res = await fetch(`/api/blogs/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+
+      if (res.ok) {
+        toast.success('Your blog has been deleted.')
+        setBlogs(blogs.filter((b) => b.id !== id))
+      } else {
+        toast.error('Failed to delete blog.')
+      }
+    }
+  }
+
   return (
-    <main className="max-w-3xl mx-auto mt-12">
-      <h1 className="text-2xl font-bold mb-4">Admin Blog Dashboard</h1>
-      <ul className="space-y-4">
+    <div className="container my-1">
+      <h1 className="mb-2 fw-bold">Admin Blog Dashboard</h1>
+      <div className="row">
         {blogs.map((blog) => (
-          <li key={blog.id} className="p-4 bg-white shadow rounded">
-            <h2 className="text-lg font-bold">{blog.title}</h2>
-            <p className="text-sm text-gray-500">{new Date(blog.createdAt).toLocaleDateString()}</p>
-            <p>{blog.content.substring(0, 100)}...</p>
-            {/* Later: Add Edit & Delete buttons here */}
-            <div className="flex gap-2 mt-2">
-                <Link
-                    href={`/admin/edit/${blog.id}`}
-                    className="text-blue-600 underline text-sm"
-                >
+          <div key={blog.id} className="col-md-12 mb-4">
+            <div className="card shadow-sm">
+              <div className="card-body">
+                <h5 className="card-title">{blog.title}</h5>
+                <h6 className="card-subtitle mb-2 text-muted">
+                  {new Date(blog.createdAt).toLocaleString()}
+                </h6>
+                <div
+                  className="card-text text-truncate overflow-hidden"
+                  style={{ maxHeight: '100px' }}
+                  dangerouslySetInnerHTML={{
+                    __html: blog.content.length > 1000
+                      ? blog.content.slice(0, 1000) + '...'
+                      : blog.content,
+                  }}
+                />
+                <div className="d-flex gap-3">
+                  <Link href={`/admin/edit/${blog.id}`} className="btn btn-sm btn-outline-primary">
                     Edit
-                </Link>
-                <button
-                    onClick={async () => {
-                    if (!confirm('Delete this blog?')) return
-                    const token = localStorage.getItem('token')
-                    await fetch(`/api/blogs/${blog.id}`, {
-                        method: 'DELETE',
-                        headers: { Authorization: `Bearer ${token}` },
-                    })
-                    location.reload()
-                    }}
-                    className="text-red-600 underline text-sm"
-                >
+                  </Link>
+                  <button
+                    className="btn btn-sm btn-outline-danger"
+                    onClick={() => handleDelete(blog.id)}
+                  >
                     Delete
-                </button>
+                  </button>
                 </div>
-          </li>
+              </div>
+            </div>
+          </div>
         ))}
-      </ul>
-    </main>
+      </div>
+    </div>
   )
 }

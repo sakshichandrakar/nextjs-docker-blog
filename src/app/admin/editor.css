@@ -1,0 +1,14 @@
+.editor-container {
+  min-height: 200px;
+}
+
+.editor-input {
+  min-height: 150px;
+  outline: none;
+}
+
+.editor-placeholder {
+  color: #888;
+  position: absolute;
+  pointer-events: none;
+}

@@ -8,15 +8,22 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "dependencies": {
+    "@lexical/react": "^0.33.1",
+    "@lexical/rich-text": "^0.33.1",
     "@prisma/client": "^6.10.1",
     "bcryptjs": "^3.0.2",
     "bootstrap": "^5.3.7",
+    "jose": "^6.0.11",
     "jsonwebtoken": "^9.0.2",
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-hot-toast": "^2.5.2"
+    "react-hot-toast": "^2.5.2",
+    "sweetalert2": "^11.22.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

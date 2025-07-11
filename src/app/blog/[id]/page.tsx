@@ -27,9 +27,11 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
         </p>
       </div>
 
-      <article className="prose prose-lg max-w-none text-justify text-gray-800 leading-relaxed">
-        {blog.content}
-      </article>
+      <article
+        className="prose prose-lg max-w-none text-justify text-gray-800 leading-relaxed"
+        dangerouslySetInnerHTML={{ __html: blog.content }}
+      />
+
     </main>
   )
 }

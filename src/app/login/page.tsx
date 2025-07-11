@@ -6,9 +6,10 @@ import { useRouter } from 'next/navigation'
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const router = useRouter()
 
-  async function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const res = await fetch('/api/auth/login', {
       method: 'POST',
@@ -26,27 +27,51 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="max-w-md mx-auto p-8 bg-white shadow mt-20 rounded">
-      <h1 className="text-xl font-bold mb-4">Admin Login</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-2 border rounded"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-2 border rounded"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
-        <button className="bg-blue-600 text-white px-4 py-2 rounded w-full">
-          Login
-        </button>
-      </form>
+    <main className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <h2 className="mb-4 text-center">Admin Login</h2>
+              <form onSubmit={handleSubmit}>
+                {/* Email */}
+                <div className="mb-3">
+                  <label htmlFor="email" className="form-label">Email address</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {/* Password + Eye Icon Toggle */}
+                <div className="mb-3">
+                  <label htmlFor="password" className="form-label">Password</label>
+                  <div className="input-group">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      className="form-control"
+                      id="password"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                      required
+                    />
+                    <span className="input-group-text" style={{ cursor: 'pointer' }} onClick={() => setShowPassword(prev => !prev)}>
+                      {showPassword ? '👁️‍🗨️' : '👁️'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <button type="submit" className="btn btn-primary w-100">Login</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   )
 }

@@ -1,4 +1,11 @@
-import { Blog } from '@prisma/client'
+// Define Blog type locally to match your data structure
+type Blog = {
+  id: string
+  title: string
+  content: string
+  createdAt: string | Date
+}
+
 import Link from 'next/link'
 
 // Fetch blogs from the API
@@ -28,11 +35,11 @@ export default async function HomePage() {
       {blogs.length === 0 ? (
         <p className="text-center text-gray-500">No blogs found.</p>
       ) : (
-<ul className="list-unstyled grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-{blogs.map((blog) => (
+        <ul className="list-unstyled grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {blogs.map((blog) => (
             <li
               key={blog.id}
-              className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 p-3 border border-gray-200"
+              className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 p-3 m-3 border border-gray-200"
             >
               <Link href={`/blog/${blog.id}`}>
                 <h2 className="text-xl font-semibold text-blue-700 hover:underline">
@@ -42,11 +49,21 @@ export default async function HomePage() {
               <p className="text-sm text-gray-500 mt-1">
                 Published on {new Date(blog.createdAt).toLocaleDateString()}
               </p>
-              <p className="mt-4 text-gray-700 leading-relaxed">
-                {blog.content.length > 150
-                  ? blog.content.substring(0, 150) + '...'
+              {/* <p className="mt-4 text-gray-700 leading-relaxed">
+                {blog.content.length > 350
+                  ? blog.content.substring(0, 350) + '...'
                   : blog.content}
-              </p>
+              </p> */}
+              <div
+                className="mt-4 text-gray-700 leading-relaxed prose max-w-none"
+                dangerouslySetInnerHTML={{
+                  __html:
+                    blog.content.length > 350
+                      ? blog.content.slice(0, blog.content.indexOf('</p>', 350) + 4) + '...'
+                      : blog.content,
+                }}
+              />
+
               <Link
                 href={`/blog/${blog.id}`}
                 className="mt-4 inline-block text-sm text-blue-600 hover:underline font-medium"

@@ -9,14 +9,16 @@ datasource db {
 
 model Blog {
   id        Int      @id @default(autoincrement())
-  title     String
-  content   String
-  createdAt DateTime @default(now())
+  title     String   @db.LongText
+  content   String   @db.LongText
+  createdAt DateTime @default(now()) @db.DateTime(0)
 }
 
 model User {
   id       Int    @id @default(autoincrement())
   email    String @unique
   password String
-  role     String @default("admin")
+  role     String
+  username String
 }
+
