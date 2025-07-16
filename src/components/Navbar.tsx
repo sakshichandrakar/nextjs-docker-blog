@@ -53,7 +53,9 @@ export default function Navbar() {
 
           {isLoggedIn ? (
             <>
-              <span className="text-white fw-semibold">{userName}</span>
+              <Link href="/admin" className="text-white fw-semibold text-decoration-none">
+                {userName}
+              </Link>
             </>
           ) : (
             <>
