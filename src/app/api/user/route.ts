@@ -35,9 +35,14 @@ export async function GET(request: NextRequest) {
         }
 
         return NextResponse.json(user)
-    } catch (error: any) {
-        console.error('Prisma error:', error.message || error)
-        return NextResponse.json({ error: error.message || 'Server error' }, { status: 500 })
-    }
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error('Prisma error:', error.message)
+          return NextResponse.json({ error: error.message }, { status: 500 })
+        }
+      
+        console.error('Prisma error:', error)
+        return NextResponse.json({ error: 'Server error' }, { status: 500 })
+      }      
 
 }

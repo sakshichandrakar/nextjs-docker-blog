@@ -21,6 +21,11 @@ import { $getRoot } from 'lexical'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../../editor.css'
+type Blog = {
+  id: number
+  title: string
+  content: string
+}
 
 export default function EditBlogPage() {
   const { id } = useParams() as { id: string }
@@ -33,8 +38,11 @@ export default function EditBlogPage() {
   useEffect(() => {
     const fetchBlog = async () => {
       const res = await fetch(`/api/blogs`)
-      const data = await res.json()
-      const blog = data.find((b: any) => b.id === parseInt(id))
+      // const data = await res.json()
+      const data: Blog[] = await res.json()
+      const blog = data.find((b) => b.id === parseInt(id))
+
+      // const blog = data.find((b: Blog) => b.id === parseInt(id))
       if (blog) {
         setTitle(blog.title)
         setInitialEditorState(blog.content) // HTML
@@ -72,8 +80,8 @@ export default function EditBlogPage() {
     theme: {
       paragraph: 'editor-paragraph',
     },
-    onError: (error) => {
-      console.error('Editor Error:', error)
+    onError: (error: Error) => {
+      console.error('Editor error:', error.message)
     },
     nodes: [ListNode, ListItemNode],
   }

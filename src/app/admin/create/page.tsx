@@ -24,9 +24,9 @@ const editorConfig = {
   theme: {
     paragraph: 'editor-paragraph',
   },
-  onError: (error: any) => {
-    console.error('Editor error:', error)
-  },
+  onError: (error: Error) => {
+    console.error('Editor error:', error.message)
+  },  
   nodes: [ListNode, ListItemNode],
 }
 

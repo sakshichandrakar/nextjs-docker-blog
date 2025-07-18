@@ -28,7 +28,10 @@ export async function POST(req: NextRequest) {
     })
 
     return NextResponse.json(newBlog, { status: 201 })
-  } catch (err) {
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error('POST error:', err.message)
+    }
     return NextResponse.json({ error: 'Invalid Token' }, { status: 401 })
   }
 }
@@ -39,7 +42,10 @@ export async function GET() {
         orderBy: { createdAt: 'desc' },
       })
       return NextResponse.json(blogs)
-    } catch (err) {
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('GET error:', err.message)
+      }
       return NextResponse.json({ error: 'Error fetching blogs' }, { status: 500 })
     }
   }
